@@ -56,5 +56,12 @@
               <data android:pathSuffix=".wav" />
           </intent-filter>
       </activity>
+        <service
+            android:name=".ProxyMediaService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

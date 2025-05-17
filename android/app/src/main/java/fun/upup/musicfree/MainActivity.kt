@@ -1,11 +1,12 @@
 package `fun`.upup.musicfree
-import expo.modules.ReactActivityDelegateWrapper
 
+import android.content.Intent
+import android.os.Bundle
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import android.os.Bundle
+import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
 
@@ -25,5 +26,23 @@ class MainActivity : ReactActivity() {
   // https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
   override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(null);
+      handleIntent(intent)
   }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val uri = intent.data ?: return
+            // 将文件 URI 传递给 Service
+            val serviceIntent = Intent(this, ProxyMediaService::class.java).apply {
+                action = ProxyMediaService.PLAY_FILE_ACTION
+                putExtra(ProxyMediaService.PLAY_FILE_URI, uri.toString())
+            }
+            startService(serviceIntent)
+        }
+    }
 }
